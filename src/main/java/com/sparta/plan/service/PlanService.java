@@ -2,6 +2,7 @@ package com.sparta.plan.service;
 
 import com.sparta.plan.dto.CreatePlanRequest;
 import com.sparta.plan.dto.CreatePlanResponse;
+import com.sparta.plan.dto.GetPlanResponse;
 import com.sparta.plan.entity.Plan;
 import com.sparta.plan.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Service
@@ -19,7 +22,7 @@ public class PlanService {
     private final PlanRepository planRepository;
 
     @Transactional
-    public CreatePlanResponse CreatePlan(CreatePlanRequest request){
+    public CreatePlanResponse createPlan(CreatePlanRequest request){
         Plan plan = new Plan(
                 request.getName(),
                 request.getTitle(),
@@ -36,4 +39,19 @@ public class PlanService {
                 savedPlan.getUpdatedAt()
         );
     }
+    @Transactional(readOnly = true)
+    public GetPlanResponse findOne(Long planId) {
+        Plan plan = planRepository.findById(planId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 일정이 없습니다.")
+        );
+      return new GetPlanResponse(
+              plan.getId(),
+              plan.getName(),
+              plan.getTitle(),
+              plan.getContents(),
+              plan.getCreatedAt(),
+              plan.getUpdatedAt()
+      );
+    }
 }
+
