@@ -181,7 +181,7 @@
 
 ####  Response
 
-##### ▶ 204 No Content (삭제 성공) 
+##### ▶ 204 No Content (삭제 성공)
 ```json
 
 ```
