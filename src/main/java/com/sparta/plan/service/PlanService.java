@@ -94,5 +94,16 @@ public class PlanService {
                 plan.getUpdatedAt()
         );
     }
+    @Transactional
+    public void delete(Long planId, DeletePlanRequest request) {
+        Plan plan = planRepository.findById(planId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 일정이 없습니다.")
+        );
+        if(!plan.getPassword().equals(request.getPassword())){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다!");
+        }
+        planRepository.deleteById(planId);
+    }
 }
+
 
