@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -52,6 +54,27 @@ public class PlanService {
               plan.getCreatedAt(),
               plan.getUpdatedAt()
       );
+    }
+    @Transactional(readOnly = true)
+    public List<GetPlanResponse> findAll() {
+        List<Plan> plans = planRepository.findAll();
+        {
+
+            List<GetPlanResponse> dtos = new ArrayList<>();
+            for (Plan plan : plans) {
+                dtos.add(
+                        new GetPlanResponse(
+                                plan.getId(),
+                                plan.getName(),
+                                plan.getTitle(),
+                                plan.getContents(),
+                                plan.getCreatedAt(),
+                                plan.getUpdatedAt()
+                        )
+                );
+            }
+            return dtos;
+        }
     }
 }
 
