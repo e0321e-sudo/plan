@@ -24,8 +24,10 @@ public class PlanController {
         return ResponseEntity.status(HttpStatus.OK).body(planService.findOne(planId));
     }
     @GetMapping("/plans")
-    public ResponseEntity<List<GetPlanResponse>> getPlans(){
-        return ResponseEntity.status(HttpStatus.OK).body(planService.findAll());
+    public ResponseEntity<List<GetPlanResponse>> getPlans(
+            @RequestParam(required = false) String name
+    ){
+        return ResponseEntity.status(HttpStatus.OK).body(planService.findAll(name));
     }
     @PutMapping("/plans/{planId}")
     public ResponseEntity<UpdatePlanResponse> updatePlan(

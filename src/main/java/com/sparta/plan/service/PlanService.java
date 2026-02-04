@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -51,13 +52,19 @@ public class PlanService {
       );
     }
     @Transactional(readOnly = true)
-    public List<GetPlanResponse> findAll() {
-        List<Plan> plans = planRepository.findAll();
-        {
+    public List<GetPlanResponse> findAll(String name) {
+        List<Plan> plans;
+
+        if(name == null || name.isBlank()){
+            plans = planRepository.findAll();
+        }else {
+            plans = planRepository.findByName(name);
+        }
+        plans.sort(Comparator.comparing(Plan::getUpdatedAt).reversed());
+
             List<GetPlanResponse> dtos = new ArrayList<>();
             for (Plan plan : plans) {
-                dtos.add(
-                        new GetPlanResponse(
+                dtos.add(new GetPlanResponse(
                                 plan.getId(),
                                 plan.getName(),
                                 plan.getTitle(),
@@ -69,7 +76,7 @@ public class PlanService {
             }
             return dtos;
         }
-    }
+
     @Transactional
     public UpdatePlanResponse updatePlan(Long planId, UpdatePlanRequest request) {
         Plan plan = planRepository.findById(planId).orElseThrow(
