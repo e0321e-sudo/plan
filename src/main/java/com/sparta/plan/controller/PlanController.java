@@ -1,8 +1,6 @@
 package com.sparta.plan.controller;
 
-import com.sparta.plan.dto.CreatePlanRequest;
-import com.sparta.plan.dto.CreatePlanResponse;
-import com.sparta.plan.dto.GetPlanResponse;
+import com.sparta.plan.dto.*;
 import com.sparta.plan.service.PlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,5 +26,12 @@ public class PlanController {
     @GetMapping("/plans")
     public ResponseEntity<List<GetPlanResponse>> getPlans(){
         return ResponseEntity.status(HttpStatus.OK).body(planService.findAll());
+    }
+    @PutMapping("/plans/{planId}")
+    public ResponseEntity<UpdatePlanResponse> updatePlan(
+            @PathVariable Long planId,
+            @RequestBody UpdatePlanRequest request
+    ){
+        return ResponseEntity.status(HttpStatus.OK).body(planService.updatePlan(planId, request));
     }
 }

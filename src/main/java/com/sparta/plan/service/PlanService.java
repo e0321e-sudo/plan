@@ -1,20 +1,14 @@
 package com.sparta.plan.service;
 
-import com.sparta.plan.dto.CreatePlanRequest;
-import com.sparta.plan.dto.CreatePlanResponse;
-import com.sparta.plan.dto.GetPlanResponse;
+import com.sparta.plan.dto.*;
 import com.sparta.plan.entity.Plan;
 import com.sparta.plan.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 
 @Service
@@ -46,6 +40,7 @@ public class PlanService {
         Plan plan = planRepository.findById(planId).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 일정이 없습니다.")
         );
+
       return new GetPlanResponse(
               plan.getId(),
               plan.getName(),
@@ -59,7 +54,6 @@ public class PlanService {
     public List<GetPlanResponse> findAll() {
         List<Plan> plans = planRepository.findAll();
         {
-
             List<GetPlanResponse> dtos = new ArrayList<>();
             for (Plan plan : plans) {
                 dtos.add(
@@ -75,6 +69,30 @@ public class PlanService {
             }
             return dtos;
         }
+    }
+    @Transactional
+    public UpdatePlanResponse updatePlan(Long planId, UpdatePlanRequest request) {
+        Plan plan = planRepository.findById(planId).orElseThrow(
+            () -> new IllegalArgumentException("해당하는 일정이 없습니다.")
+        );
+
+        if(!plan.getPassword().equals(request.getPassword())){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다!");
+        }
+
+        plan.updatePlan(
+                request.getName(),
+                request.getTitle()
+        );
+
+        return new UpdatePlanResponse(
+                plan.getId(),
+                plan.getName(),
+                plan.getTitle(),
+                plan.getContents(),
+                plan.getCreatedAt(),
+                plan.getUpdatedAt()
+        );
     }
 }
 
