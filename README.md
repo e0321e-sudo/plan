@@ -1,5 +1,4 @@
 ![ERD](img.png)
-
 ----
 
 ### 1. 3 Layer Architecture(Controller, Service, Repository)를 적절히 적용했는지 확인해 보고, 왜 이러한 구조가 필요한지 작성해 주세요.
